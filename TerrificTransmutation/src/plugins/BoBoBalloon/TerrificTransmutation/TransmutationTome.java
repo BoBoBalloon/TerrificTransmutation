@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,12 +23,12 @@ import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 public class TransmutationTome implements Listener {
 	
 	public static ItemStack item;
-	public static NamespacedKey key;
+	public NamespacedKey key;
 	
-	public static Inventory inventory;
-	public static String inventory_name;
-	public static int inv_boxes = 6;
-	public static int rows = inv_boxes * 9;
+	public Inventory inventory;
+	public String inventory_name;
+	public int inv_boxes = 6;
+	public int rows = inv_boxes * 9;
 	
 	public TransmutationTome() {
 		TerrificTransmutation.getPlugin().getServer().getPluginManager().registerEvents(this, TerrificTransmutation.getPlugin());
@@ -39,7 +40,7 @@ public class TransmutationTome implements Listener {
 		return item;
 	}
 	
-	public static NamespacedKey getKey() {
+	public NamespacedKey getKey() {
 		return key;
 	}
 	
@@ -63,12 +64,13 @@ public class TransmutationTome implements Listener {
 		item = tome;
 	}
 	
+	
 	@EventHandler
 	public void tomeOpen(PlayerInteractEvent event) {
 		if (event.getPlayer().getInventory().getItemInMainHand() != null) {
-			if (isTome(event.getPlayer().getInventory().getItemInMainHand())) {
-				event.getPlayer().sendMessage("is item");
-				event.getPlayer().openInventory(GUI());
+			if (isTome(event.getPlayer().getInventory().getItemInMainHand()) && 
+					event.getPlayer().hasPermission("terrifictransmutation.usetome")) {
+				event.getPlayer().openInventory(GUI(event.getPlayer()));
 				event.setCancelled(true);
 			}
 		}
@@ -86,18 +88,31 @@ public class TransmutationTome implements Listener {
 		return item;
 	}
 	
+	private ItemStack EMCValue(EMCPlayer player) {
+		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
+		ItemMeta meta = item.getItemMeta();
+		
+		meta.setDisplayName(Strings.format("&aYour EMC is &c" + player.getEMC()));
+		
+		meta.setCustomModelData(69);
+		
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	private void initializeUI() {
 		inventory_name = Strings.format("&r&7Anvil");
 		
 		inventory = Bukkit.createInventory(null, rows);
 	}
 	
-	private Inventory GUI() {
-		Inventory mainMenu = Bukkit.createInventory(null, rows, inventory_name);
+	private Inventory GUI(Player player) {
+		Inventory mainMenu = Bukkit.createInventory(player, rows, inventory_name);
 
 		//menu of all items here but im too lazy
-		inventory.setItem(1 - 1, backround());
-		inventory.setItem(2 - 1, new ItemStack(Material.DIRT, 1)); //remove later
+		inventory.setItem(1 - 1, EMCValue(new EMCPlayer(player)));
+		inventory.setItem(2 - 1, backround());
+		inventory.setItem(3 - 1, new ItemStack(Material.DIRT, 1)); //remove later
 		
 		mainMenu.setContents(inventory.getContents());
 		return mainMenu;
@@ -105,11 +120,11 @@ public class TransmutationTome implements Listener {
 	
 	@EventHandler
 	public void onClick(InventoryClickEvent event) {
-		if (event.getView().getTitle().equalsIgnoreCase(inventory_name)) {
+		if (event.getView().getTitle().equalsIgnoreCase(inventory_name) && event.getWhoClicked() instanceof Player) {
 				if (event.getCurrentItem() != null) {
 					if (!event.getCurrentItem().getItemMeta().hasCustomModelData() &&
 							!(event.getClickedInventory() instanceof PlayerInventory)) {
-						//remove emc value
+						new EMCPlayer((Player)event.getWhoClicked()).subtractEMC(0);
 						event.getWhoClicked().getInventory().addItem(new ItemStack(event.getCurrentItem().getType(), (event.getCurrentItem().getAmount())));
 					}
 					event.setCancelled(true);
@@ -118,9 +133,9 @@ public class TransmutationTome implements Listener {
 	}
 	
 	
-	public static boolean isTome(ItemStack one) {
+	public boolean isTome(ItemStack one) {
 		if (one.hasItemMeta()) {
-			if (!one.getItemMeta().getPersistentDataContainer().has(TransmutationTome.getKey(), PersistentDataType.STRING)) {
+			if (!one.getItemMeta().getPersistentDataContainer().has(getKey(), PersistentDataType.STRING)) {
 				return false;
 			}
 		} else {

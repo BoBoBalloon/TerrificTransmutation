@@ -1,0 +1,5 @@
+# Don't edit the player data at all costs! -BoBoBalloon(author of the plugin)
+Items:
+  - Dirt, 1
+  - Cobblestone, 2
+PlayerData:
