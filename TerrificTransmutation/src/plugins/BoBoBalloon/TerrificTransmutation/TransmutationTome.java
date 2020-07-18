@@ -26,7 +26,7 @@ public class TransmutationTome implements Listener {
 	public NamespacedKey key;
 	
 	public Inventory inventory;
-	public String inventory_name;
+	public static String inventory_name;
 	public int inv_boxes = 6;
 	public int rows = inv_boxes * 9;
 	
@@ -34,6 +34,10 @@ public class TransmutationTome implements Listener {
 		TerrificTransmutation.getPlugin().getServer().getPluginManager().registerEvents(this, TerrificTransmutation.getPlugin());
 		initializeUI();
 		tomeItem();
+	}
+	
+	public static String getInventoryName() {
+		return inventory_name;
 	}
 	
 	public static ItemStack getItem() {
@@ -101,7 +105,7 @@ public class TransmutationTome implements Listener {
 	}
 	
 	private void initializeUI() {
-		inventory_name = Strings.format("&r&7Anvil");
+		inventory_name = Strings.format("&r&dTransmutation");
 		
 		inventory = Bukkit.createInventory(null, rows);
 	}
@@ -124,7 +128,7 @@ public class TransmutationTome implements Listener {
 				if (event.getCurrentItem() != null) {
 					if (!event.getCurrentItem().getItemMeta().hasCustomModelData() &&
 							!(event.getClickedInventory() instanceof PlayerInventory)) {
-						new EMCPlayer((Player)event.getWhoClicked()).subtractEMC(0);
+						//take away emc here
 						event.getWhoClicked().getInventory().addItem(new ItemStack(event.getCurrentItem().getType(), (event.getCurrentItem().getAmount())));
 					}
 					event.setCancelled(true);

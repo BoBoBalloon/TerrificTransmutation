@@ -1,0 +1,47 @@
+name: TerrificTransmutation
+version: 1.0
+api-version: 1.15
+author: BoBoBalloon
+main: plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation
+description: Transmutation in minecraft!
+
+commands:
+  gettome:
+    description: get an transmutation tome
+  emcdata:
+    description: get a players emc value
+  emcset:
+    description: set a players emc value
+  terrifictransmutation:
+    description: default command
+  
+permissions:
+  terrifictransmutation.*:
+   description: All access permission
+   default: op
+   children:
+      terrifictransmutation.usetome: true
+      terrifictransmutation.command.*: true
+  terrifictransmutation.usetome:
+   description: Allows player to use a transmutation tome
+   default: op
+  terrifictransmutation.command.*:
+   description: All command access permission
+   default: op
+   children:
+      terrifictransmutation.command.gettome: true
+      terrifictransmutation.command.emcdata: true
+      terrifictransmutation.command.emcset: true
+      terrifictransmutation.command.reload: true
+  terrifictransmutation.command.gettome:
+   description: Allows gettome command
+   default: op
+  terrifictransmutation.command.emcdata:
+   description: Allows emcdata command
+   default: op
+  terrifictransmutation.command.emcset:
+   description: Allows emcset command
+   default: op
+  terrifictransmutation.command.reload:
+   description: Allows reload command
+   default: op

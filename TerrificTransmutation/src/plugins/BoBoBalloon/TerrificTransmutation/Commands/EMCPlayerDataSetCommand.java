@@ -27,7 +27,7 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 						try {
 							int number = Integer.parseInt(args[1]);
 							target.setEMC(number);
-							player.sendMessage(Strings.format("&a " + target.getPlayer().getName() + "'s EMC is now: &c" + number));
+							player.sendMessage(Strings.format("&a" + target.getPlayer().getName() + "'s EMC is now: &c" + number));
 							player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2F, 1F);
 							return true;
 						} catch (NumberFormatException error) {
@@ -49,7 +49,7 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 					try {
 						int number = Integer.parseInt(args[1]);
 						target.setEMC(number);
-						sender.sendMessage(Strings.format("&a " + target.getPlayer().getName() + "'s EMC is now: &c" + number));
+						sender.sendMessage(Strings.format("&a" + target.getPlayer().getName() + "'s EMC is now: &c" + number));
 						return true;
 					} catch (NumberFormatException error) {
 						sender.sendMessage(Strings.format("&r&cPlease enter a valid number!"));

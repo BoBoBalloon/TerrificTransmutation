@@ -2,15 +2,18 @@ package plugins.BoBoBalloon.TerrificTransmutation;
 
 import org.bukkit.entity.Player;
 
+import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
+
 public class EMCPlayer {
 
 	public Player player;
 	public int emc;
+	public Database database = new Database();
 	
 	public EMCPlayer(Player player) {
 		this.player = player;
 		
-		emc = TerrificTransmutation.getPlugin().getConfig().getInt("PlayerData." + player.getUniqueId());
+		emc = database.getDatabase().getInt("PlayerData." + player.getUniqueId() + ".EMC");
 	}
 	
 	public int getEMC() {
@@ -22,23 +25,10 @@ public class EMCPlayer {
 	}
 	
 	public void setEMC(int amount) {
-		TerrificTransmutation.getPlugin().getConfig().set("PlayerData." + player.getUniqueId(), amount);
-		TerrificTransmutation.getPlugin().getConfig().options().copyDefaults(true);
-		TerrificTransmutation.getPlugin().saveConfig();
+		database.getDatabase().set("PlayerData." + player.getUniqueId() + ".EMC", amount);
+		database.getDatabase().options().copyDefaults(true);
+		database.getDatabase().options().copyHeader(true);
+		database.saveDatabase();
 		emc = amount;
-	}
-	
-	public void addEMC(int amount) {
-		TerrificTransmutation.getPlugin().getConfig().set("PlayerData." + player.getUniqueId(), emc + amount);
-		TerrificTransmutation.getPlugin().getConfig().options().copyDefaults(true);
-		TerrificTransmutation.getPlugin().saveConfig();
-		emc = emc + amount;
-	}
-	
-	public void subtractEMC(int amount) {
-		TerrificTransmutation.getPlugin().getConfig().set("PlayerData." + player.getUniqueId(), emc - amount);
-		TerrificTransmutation.getPlugin().getConfig().options().copyDefaults(true);
-		TerrificTransmutation.getPlugin().saveConfig();
-		emc = emc - amount;
 	}
 }
