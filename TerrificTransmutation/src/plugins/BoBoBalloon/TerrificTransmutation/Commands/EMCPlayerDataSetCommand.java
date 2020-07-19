@@ -22,8 +22,8 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 			Player player = (Player) sender;
 			if (player.hasPermission("terrifictransmutation.command.emcset")) {
 				if (args.length == 2) {
-					EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
-					if (Bukkit.getServer().getPlayer(args[0]) != null) {
+					try {
+						EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
 						try {
 							int number = Integer.parseInt(args[1]);
 							target.setEMC(number);
@@ -34,6 +34,8 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 							player.sendMessage(Strings.format("&r&cPlease enter a valid number!"));
 							player.sendMessage(Strings.format("&r&c/emcset {player} {number}"));
 						}
+					} catch (NullPointerException error) {
+						player.sendMessage(Strings.format("&r&cPlease enter a valid player!"));
 					}
 				} else {
 					player.sendMessage(Strings.format("&r&cYou have used improper arguments to execute this command!"));
@@ -44,8 +46,8 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 			}
 		} else {
 			if (args.length == 2) {
-				EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
-				if (Bukkit.getServer().getPlayer(args[0]) != null) {
+				try {
+					EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
 					try {
 						int number = Integer.parseInt(args[1]);
 						target.setEMC(number);
@@ -55,6 +57,8 @@ public class EMCPlayerDataSetCommand implements CommandExecutor {
 						sender.sendMessage(Strings.format("&r&cPlease enter a valid number!"));
 						sender.sendMessage(Strings.format("&r&c/emcset {player} {number}"));
 					}
+				} catch (NullPointerException error) {
+					sender.sendMessage(Strings.format("&r&cPlease enter a valid player!"));
 				}
 			} else {
 				sender.sendMessage(Strings.format("&r&cYou have used improper arguments to execute this command!"));

@@ -15,11 +15,16 @@ import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerPickupItemListe
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//creative listener broken fix later
-	//make gui
-	//make every player a list of strings that is the materials they unlocked and add a method to the EMCPlayer class that returns-
-	//said list, call the path "PlayerData.UUID.UnlockedItems"
-	//make it work
+	//make it so when getting items when gui opens if slot would be empty just put black stained glass pane using backround method
+	
+	//before doing this, upload a backup to the repo
+	//make another foldeer inside of the master folder call it database and for every player add a new file for them that holds-
+	//thier unlocked items and emc read and write to that file
+	
+	
+	//add search feature
+	//test gui with more then one player
+	
 	//add transmutation table, new "block" you can place and works like tablet from there
 	
 	public static TerrificTransmutation PLUGIN;

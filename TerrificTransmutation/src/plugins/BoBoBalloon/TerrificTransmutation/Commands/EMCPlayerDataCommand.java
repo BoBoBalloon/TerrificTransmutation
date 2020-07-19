@@ -22,11 +22,13 @@ public class EMCPlayerDataCommand implements CommandExecutor {
 			Player player = (Player) sender;
 			if (player.hasPermission("terrifictransmutation.command.emcdata")) {
 				if (args.length == 1) {
-					EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
-					if (Bukkit.getServer().getPlayer(args[0]) != null) {
+					try {
+						EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
 						player.sendMessage(Strings.format("&a" + target.getPlayer().getName() + "'s EMC equals: &c" + target.getEMC()));
 						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2F, 1F);
 						return true;
+					} catch (NullPointerException error) {
+						player.sendMessage(Strings.format("&r&cPlease enter a valid player!"));
 					}
 				} else {
 					player.sendMessage(Strings.format("&r&cYou have used improper arguments to execute this command!"));
@@ -37,10 +39,12 @@ public class EMCPlayerDataCommand implements CommandExecutor {
 			}
 		} else {
 			if (args.length == 1) {
-				EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
-				if (Bukkit.getServer().getPlayer(args[0]) != null) {
+				try {
+					EMCPlayer target = new EMCPlayer(Bukkit.getPlayer(args[0]));
 					sender.sendMessage(Strings.format("&a" + target.getPlayer().getName() + "'s EMC equals: &c" + target.getEMC()));
 					return true;
+				} catch (NullPointerException error) {
+					sender.sendMessage(Strings.format("&r&cPlease enter a valid player!"));
 				}
 			} else {
 				sender.sendMessage(Strings.format("&r&cYou have used improper arguments to execute this command!"));
