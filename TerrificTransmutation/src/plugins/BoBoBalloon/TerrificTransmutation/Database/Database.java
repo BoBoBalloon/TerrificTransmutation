@@ -5,15 +5,30 @@ import java.io.IOException;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 
 public class Database {
 
-	public File databaseFile = new File(TerrificTransmutation.getPlugin().getDataFolder(), "database.yml");
-	public FileConfiguration databaseConfig = YamlConfiguration.loadConfiguration(databaseFile);
+	private File databaseFile;
+	private FileConfiguration databaseConfig;
 	
-	public FileConfiguration getDatabase() {
+	public Database(String name) {
+		try {
+			databaseFile = new File(TerrificTransmutation.getDatabase() + "/" + name + ".yml");
+			
+			if (!databaseFile.createNewFile()) {
+				databaseFile = new File(TerrificTransmutation.getDatabase(), name + ".yml");
+			}
+			
+			databaseConfig = YamlConfiguration.loadConfiguration(databaseFile);
+			
+			databaseConfig.load(databaseFile);
+		} catch (IOException | InvalidConfigurationException error) {
+			error.printStackTrace();
+		}
+	}
+	
+	public FileConfiguration getConfig() {
 		return databaseConfig;
 	}
 	
@@ -21,25 +36,12 @@ public class Database {
 		return databaseFile;
 	}
 	
-	public void saveDatabase() {
+	public void saveConfig() {
 		try {
-			getDatabase().save(databaseFile);
+			databaseConfig.save(databaseFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void createDatabaseConfig() {
-        if (!databaseFile.exists()) {
-        	databaseFile.getParentFile().mkdirs();
-        	TerrificTransmutation.getPlugin().saveResource("database.yml", false);
-         }
-
-        try {
-        	databaseConfig.load(databaseFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
 	
 }

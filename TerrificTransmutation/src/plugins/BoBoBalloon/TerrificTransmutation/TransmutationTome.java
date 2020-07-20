@@ -232,10 +232,10 @@ public class TransmutationTome implements Listener {
 				if (event.getRawSlot() == 50 - 1) {
 					EMCPlayer player = new EMCPlayer((Player)event.getWhoClicked());
 					if (player.getValue(event.getCursor().getType()) == -1) return;
-					Database database = new Database();
-					if (database.getDatabase().contains("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems")) {
-						if (!database.getDatabase().getStringList("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems").contains(event.getCursor().getType().name())) {
-							List<String> list = database.getDatabase().getStringList("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems");
+					Database database = new Database(player.getPlayer().getUniqueId().toString());
+					if (!database.getConfig().getStringList("UnlockedItems").isEmpty()) {
+						if (!database.getConfig().getStringList("UnlockedItems").contains(event.getCursor().getType().name())) {
+							List<String> list = database.getConfig().getStringList("UnlockedItems");
 							list.add(event.getCursor().getType().name());
 							player.setRawUnlockedMaterials(list);
 							reloadSlotsBeta(player, event.getView());

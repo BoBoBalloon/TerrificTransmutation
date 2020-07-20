@@ -13,18 +13,20 @@ import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class EMCPlayer {
 
-	public Player player;
-	public int emc;
-	public List<String> unlockedMaterials;
-	public Database database = new Database();
+	private Player player;
+	private int emc;
+	private List<String> unlockedMaterials;
+	private Database database;
 	
 	public EMCPlayer(Player player) {
 		this.player = player;
 		
-		emc = database.getDatabase().getInt("PlayerData." + player.getUniqueId() + ".EMC");
+		database = new Database(player.getUniqueId().toString());
 		
-		if (database.getDatabase().contains("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems")) {
-			unlockedMaterials = database.getDatabase().getStringList("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems");
+		emc = database.getConfig().getInt("EMC");
+		
+		if (!database.getConfig().getStringList("UnlockedItems").isEmpty()) {
+			unlockedMaterials = database.getConfig().getStringList("UnlockedItems");
 		} else {
 			unlockedMaterials = null;
 		}
@@ -39,10 +41,10 @@ public class EMCPlayer {
 	}
 	
 	public void setEMC(int amount) {
-		database.getDatabase().set("PlayerData." + player.getUniqueId() + ".EMC", amount);
-		database.getDatabase().options().copyDefaults(true);
-		database.getDatabase().options().copyHeader(true);
-		database.saveDatabase();
+		database.getConfig().set("EMC", amount);
+		database.getConfig().options().copyDefaults(true);
+		database.getConfig().options().copyHeader(true);
+		database.saveConfig();
 		emc = amount;
 	}
 	
@@ -51,10 +53,10 @@ public class EMCPlayer {
 	}
 	
 	public void setRawUnlockedMaterials(List<String> list) {
-		database.getDatabase().set("PlayerData." + player.getPlayer().getUniqueId() + ".UnlockedItems", list);
-		database.getDatabase().options().copyDefaults(true);
-		database.getDatabase().options().copyHeader(true);
-		database.saveDatabase();
+		database.getConfig().set("UnlockedItems", list);
+		database.getConfig().options().copyDefaults(true);
+		database.getConfig().options().copyHeader(true);
+		database.saveConfig();
 		unlockedMaterials = list;
 	}
 	

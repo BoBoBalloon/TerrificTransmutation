@@ -1,5 +1,7 @@
 package plugins.BoBoBalloon.TerrificTransmutation.Listeners;
 
+import java.util.ArrayList;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,11 +19,11 @@ public class PlayerJoinListener implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		Database database = new Database();
-		if (!database.getDatabase().contains("PlayerData." + event.getPlayer().getUniqueId() + ".EMC")) {
-			database.getDatabase().set("PlayerData." + event.getPlayer().getUniqueId() + ".EMC", 0);
-			database.getDatabase().options().copyDefaults(true);
-			database.saveDatabase();
+		Database database = new Database(event.getPlayer().getUniqueId().toString());
+		if (database.getFile().length() == 0) {
+			database.getConfig().set("EMC", 0);
+			database.getConfig().set("UnlockedItems", new ArrayList<String>());
+			database.saveConfig(); 
 		}
 		
 		
@@ -31,4 +33,5 @@ public class PlayerJoinListener implements Listener {
 		
 		
 	}
+	
 }
