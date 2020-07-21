@@ -17,7 +17,6 @@ public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
 	//add search feature
-	//make gui work for more then one player, make new inventory for each new player
 	//add transmutation table, new "block" you can place and works like tablet from there
 	
 	public static TerrificTransmutation PLUGIN;
@@ -36,7 +35,8 @@ public class TerrificTransmutation extends JavaPlugin {
 			database.mkdir();
 		}
 		
-		new TransmutationTome();
+		new EMCMenu();
+		
 		new PlayerCreativeItemListener();
 		new PlayerJoinListener();
 		new PlayerPickupItemListener();
