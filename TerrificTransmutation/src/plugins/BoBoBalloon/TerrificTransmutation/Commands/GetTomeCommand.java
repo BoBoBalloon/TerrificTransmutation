@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugins.BoBoBalloon.TerrificTransmutation.EMCMenu;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
+import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class GetTomeCommand implements CommandExecutor {
@@ -20,7 +20,7 @@ public class GetTomeCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (player.hasPermission("terrifictransmutation.command.gettome")) {
-				player.getInventory().addItem(EMCMenu.tome());
+				player.getInventory().addItem(Tome.tome());
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2F, 1F);
 				return true;
 			} else {

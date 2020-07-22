@@ -8,6 +8,7 @@ import plugins.BoBoBalloon.TerrificTransmutation.Commands.EMCPlayerDataCommand;
 import plugins.BoBoBalloon.TerrificTransmutation.Commands.EMCPlayerDataSetCommand;
 import plugins.BoBoBalloon.TerrificTransmutation.Commands.GetTomeCommand;
 import plugins.BoBoBalloon.TerrificTransmutation.Commands.MasterCommand;
+import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.OpenContainerListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerCreativeItemListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerJoinListener;
@@ -24,24 +25,29 @@ public class TerrificTransmutation extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		//initializing
 		PLUGIN = this;
-		database = new File(TerrificTransmutation.getPlugin().getDataFolder() + "/database");
+		database = new File(PLUGIN.getDataFolder() + "/database");
 		
+		//files
 		getConfig().options().copyHeader(true);
 		getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
+		if (!database.exists()) database.mkdir();
 		
-		if (!database.exists()) {
-			database.mkdir();
-		}
+		//items & blocks
+		new Tome();
 		
+		//menu
 		new EMCMenu();
 		
+		//listeners
 		new PlayerCreativeItemListener();
 		new PlayerJoinListener();
 		new PlayerPickupItemListener();
 		new OpenContainerListener();
 		
+		//commands
 		new MasterCommand();
 		new EMCPlayerDataCommand();
 		new EMCPlayerDataSetCommand();

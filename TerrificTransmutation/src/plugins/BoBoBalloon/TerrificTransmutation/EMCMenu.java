@@ -1,6 +1,5 @@
 package plugins.BoBoBalloon.TerrificTransmutation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,57 +7,29 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
-import plugins.BoBoBalloon.TerrificTransmutation.Utils.NormalUtils;
+import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class EMCMenu implements Listener {
 
-	private Map<UUID, Inventory> inventoryList;
-	private String inventory_name = Strings.format("&r&dTransmutation");
-	private static NamespacedKey tomeKey;
+	private static Map<UUID, Inventory> inventoryList;
+	private static String inventory_name = Strings.format("&r&dTransmutation");
 	
 	public EMCMenu() {
 		inventoryList = new HashMap<>();
 		
-		tomeKey = new NamespacedKey(TerrificTransmutation.getPlugin(), "isTome");
-		
 		TerrificTransmutation.getPlugin().getServer().getPluginManager().registerEvents(this, TerrificTransmutation.getPlugin());
-	}
-	
-	public static ItemStack tome() {
-		ItemStack tome = NormalUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=");
-		ItemMeta meta = tome.getItemMeta();
-		NamespacedKey randomKey = new NamespacedKey(TerrificTransmutation.getPlugin(), "randomValue");
-		
-		meta.setDisplayName(Strings.format("&dTransmutation Tome"));
-		
-		List<String> lore = new ArrayList<String>();
-		lore.add("");
-		lore.add(Strings.format("&rClick this item to open your &dtransmutation tome"));
-		meta.setLore(lore);
-		
-		meta.getPersistentDataContainer().set(tomeKey, PersistentDataType.STRING, "true");
-		meta.getPersistentDataContainer().set(randomKey, PersistentDataType.STRING, Strings.randomString());
-		
-		
-		tome.setItemMeta(meta);
-		return tome;
 	}
 	
 	private void addInventory(Player player, Inventory inventory) {
@@ -69,21 +40,30 @@ public class EMCMenu implements Listener {
 		if (containsInventory(player)) inventoryList.remove(player.getUniqueId());
 	}
 	
-	private boolean containsInventory(Player player) {
+	private static boolean containsInventory(Player player) {
 		if (inventoryList.containsKey(player.getUniqueId())) return true;
 		return false;	
 	}
 	
-	private void openInventory(Player player) {
+	public static void openInventory(Player player) {
 		if (containsInventory(player)) {
-			player.openInventory(inventoryList.get(player.getUniqueId()));
+			Inventory inventory = inventoryList.get(player.getUniqueId());
+			setContents(player, inventory);
+			player.openInventory(inventory);
 		} else {
 			player.openInventory(createInventory(player));
 		}
 	}
 	
-	private Inventory createInventory(Player player) {
+	private static Inventory createInventory(Player player) {
 		Inventory inventory = Bukkit.createInventory(player, 54, inventory_name);
+		
+		setContents(player, inventory);
+		
+		return inventory;
+	}
+	
+	private static void setContents(Player player, Inventory inventory) {
 		EMCPlayer p = new EMCPlayer(player);
 		
 		inventory.setItem(1 - 1, EMCValue(p));
@@ -122,10 +102,8 @@ public class EMCMenu implements Listener {
 		inventory.setItem(53 - 1, backround(Material.MAGENTA_STAINED_GLASS_PANE));
 		inventory.setItem(54 - 1, backround(Material.MAGENTA_STAINED_GLASS_PANE));
 		
-		reloadSlotsAlpha(p, inventory);
+		reloadSlots(p, inventory);
 		fillSlots(inventory);
-		
-		return inventory;
 	}
 	
 	@EventHandler
@@ -142,10 +120,10 @@ public class EMCMenu implements Listener {
 	public void onClick(InventoryClickEvent event) {
 		if (event.getView().getTitle().equalsIgnoreCase(inventory_name) && event.getWhoClicked() instanceof Player) {
 			if (event.getCurrentItem() != null) {
-				if (event.getClickedInventory() instanceof PlayerInventory && !isTome(event.getCurrentItem())) return;
+				if (event.getClickedInventory() instanceof PlayerInventory && !Tome.isTome(event.getCurrentItem())) return;
 				event.setCancelled(true);
 			} else {
-				if (!(event.getClickedInventory() instanceof PlayerInventory)) { //if broken add back in at start: event.getCursor().getType() != Material.AIR && 
+				if (!(event.getClickedInventory() instanceof PlayerInventory)) {
 					event.setCancelled(true);
 				}
 			}
@@ -189,17 +167,11 @@ public class EMCMenu implements Listener {
 					EMCPlayer player = new EMCPlayer((Player)event.getWhoClicked());
 					if (player.getValue(event.getCursor().getType()) == -1) return;
 					Database database = new Database(player.getPlayer().getUniqueId().toString());
-					if (!database.getConfig().getStringList("UnlockedItems").isEmpty()) {
-						if (!database.getConfig().getStringList("UnlockedItems").contains(event.getCursor().getType().name())) {
-							List<String> list = database.getConfig().getStringList("UnlockedItems");
-							list.add(event.getCursor().getType().name());
-							player.setRawUnlockedMaterials(list);
-							reloadSlotsBeta(player, event.getClickedInventory(), event.getView());
-						}
-					} else {
-						List<String> list = new ArrayList<String>();
+					if (!database.getConfig().getStringList("UnlockedItems").contains(event.getCursor().getType().name())) {
+						List<String> list = database.getConfig().getStringList("UnlockedItems");
 						list.add(event.getCursor().getType().name());
 						player.setRawUnlockedMaterials(list);
+						reloadSlots(player, event.getClickedInventory());
 					}
 					player.setEMC(player.getEMC() + player.getValue(event.getCursor().getType()) * event.getCursor().getAmount());
 					event.getView().setItem(1 - 1, EMCValue(player));
@@ -220,7 +192,7 @@ public class EMCMenu implements Listener {
     	return full;
     }
 	
-	private ItemStack backround(Material mat) {
+	private static ItemStack backround(Material mat) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		
@@ -232,7 +204,7 @@ public class EMCMenu implements Listener {
 		return item;
 	}
 	
-	private ItemStack EMCValue(EMCPlayer player) {
+	private static ItemStack EMCValue(EMCPlayer player) {
 		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta = item.getItemMeta();
 		
@@ -244,7 +216,7 @@ public class EMCMenu implements Listener {
 		return item;
 	}
 	
-	private ItemStack itemConverter() {
+	private static ItemStack itemConverter() {
 		ItemStack item = new ItemStack(Material.HOPPER, 1);
 		ItemMeta meta = item.getItemMeta();
 		
@@ -256,18 +228,7 @@ public class EMCMenu implements Listener {
 		return item;
 	}
 	
-	private boolean isTome(ItemStack one) {
-		if (one.hasItemMeta()) {
-			if (!one.getItemMeta().getPersistentDataContainer().has(tomeKey, PersistentDataType.STRING)) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
-	
-	private void reloadSlotsAlpha(EMCPlayer p, Inventory inventory) {
+	private static void reloadSlots(EMCPlayer p, Inventory inventory) {
 		if (p.getUnlockedMaterials() != null) {
 			clearSlots(inventory);
 			for (ItemStack item : p.getUnlockedItems()) {
@@ -280,15 +241,7 @@ public class EMCMenu implements Listener {
 		}
 	}
 	
-	private void reloadSlotsBeta(EMCPlayer p, Inventory inventory, InventoryView view) {
-		if (p.getUnlockedMaterials() != null) {
-			if (nextSlot(inventory) != -1) {
-				inventory.setItem(nextSlot(inventory), p.getUnlockedItems().get(p.getUnlockedItems().size() - 1));
-			}
-		}
-	}
-	
-	private void fillSlots(Inventory inventory) {
+	private static void fillSlots(Inventory inventory) {
 		int index = 0;
 		for (ItemStack item : inventory.getContents()) {
 			if (item == null) {
@@ -298,7 +251,7 @@ public class EMCMenu implements Listener {
 		}
 	}
 	
-	private int nextSlot(Inventory inventory) {
+	private static int nextSlot(Inventory inventory) {
 		if (inventory.getItem(12 - 1) == null || inventory.getItem(12 - 1).getType() == Material.BLACK_STAINED_GLASS_PANE) {
 			return 12 - 1;
 		} else if (inventory.getItem(13 - 1) == null || inventory.getItem(13 - 1).getType() == Material.BLACK_STAINED_GLASS_PANE) {
@@ -343,7 +296,7 @@ public class EMCMenu implements Listener {
 		return -1;
 	}
 	
-	private void clearSlots(Inventory inventory) {
+	private static void clearSlots(Inventory inventory) {
 		if (inventory.getItem(12 - 1) != null && inventory.getItem(12 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(12 - 1, null);
 		
 		if (inventory.getItem(13 - 1) != null && inventory.getItem(13 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(13 - 1, null);
@@ -383,17 +336,6 @@ public class EMCMenu implements Listener {
 		if (inventory.getItem(42 - 1) != null && inventory.getItem(42 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(42 - 1, null);
 		
 		if (inventory.getItem(43 - 1) != null && inventory.getItem(43 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(43 - 1, null);
-	}
-	
-	@EventHandler
-	public void tomeOpen(PlayerInteractEvent event) {
-		if (event.getPlayer().getInventory().getItemInMainHand() != null) {
-			if (isTome(event.getPlayer().getInventory().getItemInMainHand()) && 
-					event.getPlayer().hasPermission("terrifictransmutation.usetome")) {
-				openInventory(event.getPlayer());
-				event.setCancelled(true);
-			}
-		}
 	}
 	
 }

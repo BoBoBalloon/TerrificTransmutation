@@ -1,7 +1,10 @@
 package plugins.BoBoBalloon.TerrificTransmutation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -69,11 +72,40 @@ public class EMCPlayer {
 		return materials;
 	}
 	
-	public List<ItemStack> getUnlockedItems() {
+	public List<Material> getUnlockedMaterialsInOrder() {
 		if (getUnlockedMaterials() == null) return null;
+		Map<Material, Integer> matMap = new HashMap<Material, Integer>();
+		List<Material> availableMats = new ArrayList<Material>();
+		
+		for (Material mat : getUnlockedMaterials()) {
+			matMap.put(mat, TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + mat.name()));
+			availableMats.add(mat);
+		}
+				
+		List<Integer> values = new ArrayList<>(matMap.values());
+		Collections.sort(values, Collections.reverseOrder());
+
+		
+		
+		List<Material> materials = new ArrayList<Material>();
+		for (int integer : values) {
+			for (Material mat : getUnlockedMaterials()) {
+				if (availableMats.contains(mat)) {
+					if (matMap.get(mat) == integer) {
+						materials.add(mat);
+						availableMats.remove(mat);
+					}
+				}
+			}
+		}
+		return materials;
+	}
+	
+	public List<ItemStack> getUnlockedItems() {
+		if (getUnlockedMaterialsInOrder() == null) return null;
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		
-		for (Material material : getUnlockedMaterials()) {
+		for (Material material : getUnlockedMaterialsInOrder()) {
 			items.add(getValueItemStack(material));
 		}
 		
@@ -97,5 +129,6 @@ public class EMCPlayer {
 		if (item.getItemMeta().hasLore()) return item;
 		return null;
 	}
+	
 	
 }
