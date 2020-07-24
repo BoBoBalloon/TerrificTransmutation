@@ -5,8 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 
-import plugins.BoBoBalloon.TerrificTransmutation.AddEMC;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 
 public class PlayerPickupItemListener implements Listener {
 

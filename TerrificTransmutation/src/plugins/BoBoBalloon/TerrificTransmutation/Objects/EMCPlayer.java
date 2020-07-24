@@ -1,4 +1,4 @@
-package plugins.BoBoBalloon.TerrificTransmutation;
+package plugins.BoBoBalloon.TerrificTransmutation.Objects;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.md_5.bungee.api.ChatColor;
+import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 

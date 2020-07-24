@@ -6,8 +6,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugins.BoBoBalloon.TerrificTransmutation.EMCPlayer;
+
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.EMCPlayer;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class EMCPlayerDataSetCommand implements CommandExecutor {

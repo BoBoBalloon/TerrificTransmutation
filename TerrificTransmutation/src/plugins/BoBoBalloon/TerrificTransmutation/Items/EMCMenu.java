@@ -1,4 +1,4 @@
-package plugins.BoBoBalloon.TerrificTransmutation;
+package plugins.BoBoBalloon.TerrificTransmutation.Items;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +21,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
 
+import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
-import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.EMCPlayer;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.SignMenuFactory;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
@@ -66,18 +68,6 @@ public class EMCMenu implements Listener {
 			player.openInventory(createInventory(player));
 		}
 	}
-	/*
-	public static void openInventorySearch(Player player, String string) {
-		if (!containsInventory(player)) return;
-			Inventory inventory = inventoryList.get(player.getUniqueId());
-			
-			player.openInventory(inventory); //if still broken put back at the bottem
-			
-			inventory.setItem(9 - 1, itemSearch(string));
-			reloadSlotsSearch(new EMCPlayer(player), inventory, string);
-			fillSlots(inventory);
-	}
-	*/
 	
 	private static Inventory createInventory(Player player) {
 		Inventory inventory = Bukkit.createInventory(player, 54, inventory_name);
@@ -174,7 +164,6 @@ public class EMCMenu implements Listener {
 							player.setEMC(player.getEMC() - TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + event.getCurrentItem().getType().name()) * event.getCurrentItem().getMaxStackSize());
 							player.getPlayer().getInventory().addItem(new AddEMC(new ItemStack(event.getCurrentItem().getType(), event.getCurrentItem().getMaxStackSize())).setEMCToItem());
 						}
-						//event.getView().setItem(1 - 1, EMCValue(player));
 						event.getClickedInventory().setItem(1 - 1, EMCValue(player));
 						player.getPlayer().updateInventory();
 					} else {
@@ -196,12 +185,10 @@ public class EMCMenu implements Listener {
 						List<String> list = database.getConfig().getStringList("UnlockedItems");
 						list.add(event.getCursor().getType().name());
 						player.setRawUnlockedMaterials(list);
-						//event.getView().setItem(9 - 1, itemSearch(null));
 						event.getClickedInventory().setItem(9 - 1, itemSearch(null));
 						reloadSlots(player, event.getClickedInventory());
 					}
 					player.setEMC(player.getEMC() + player.getValue(event.getCursor().getType()) * event.getCursor().getAmount());
-					//event.getView().setItem(1 - 1, EMCValue(player));
 					event.getClickedInventory().setItem(1 - 1, EMCValue(player));
 					player.getPlayer().setItemOnCursor(new ItemStack(Material.AIR));
 					player.getPlayer().updateInventory();
@@ -435,7 +422,7 @@ class SearchTask extends BukkitRunnable {
  		EMCMenu.reloadSlotsSearch(new EMCPlayer(player), inventory, output);
  		EMCMenu.fillSlots(inventory);
  			
- 		player.openInventory(inventory); //error here
+ 		player.openInventory(inventory);
 	}
 	
 }

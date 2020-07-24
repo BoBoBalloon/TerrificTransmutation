@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
-import plugins.BoBoBalloon.TerrificTransmutation.AddEMC;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 
 public class OpenContainerListener implements Listener {
 

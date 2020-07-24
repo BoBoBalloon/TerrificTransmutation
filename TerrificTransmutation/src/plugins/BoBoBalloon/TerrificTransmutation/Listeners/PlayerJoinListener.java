@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import plugins.BoBoBalloon.TerrificTransmutation.AddEMC;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
+import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 
 public class PlayerJoinListener implements Listener {
 

@@ -1,4 +1,4 @@
-package plugins.BoBoBalloon.TerrificTransmutation;
+package plugins.BoBoBalloon.TerrificTransmutation.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.NormalUtils;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 

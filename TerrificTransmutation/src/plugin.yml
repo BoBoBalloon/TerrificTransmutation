@@ -8,6 +8,8 @@ description: Transmutation in minecraft!
 commands:
   gettome:
     description: get an transmutation tome
+  givetome:
+    description: give an transmutation tome
   emcdata:
     description: get a players emc value
   emcset:
@@ -30,10 +32,14 @@ permissions:
    default: op
    children:
       terrifictransmutation.command.gettome: true
+      terrifictransmutation.command.givetome: true
       terrifictransmutation.command.emcdata: true
       terrifictransmutation.command.emcset: true
       terrifictransmutation.command.reload: true
   terrifictransmutation.command.gettome:
+   description: Allows gettome command
+   default: op
+  terrifictransmutation.command.givetome:
    description: Allows gettome command
    default: op
   terrifictransmutation.command.emcdata:
