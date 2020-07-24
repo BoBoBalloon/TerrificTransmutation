@@ -17,19 +17,31 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.google.common.collect.Lists;
+
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
 import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
+import plugins.BoBoBalloon.TerrificTransmutation.Utils.SignMenuFactory;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class EMCMenu implements Listener {
 
 	private static Map<UUID, Inventory> inventoryList;
-	private static String inventory_name = Strings.format("&r&dTransmutation");
+	private static final String inventory_name = Strings.format("&r&dTransmutation");
+	private static SignMenuFactory signGUI;
 	
 	public EMCMenu() {
 		inventoryList = new HashMap<>();
 		
+		signGUI = new SignMenuFactory(TerrificTransmutation.getPlugin());
+		
 		TerrificTransmutation.getPlugin().getServer().getPluginManager().registerEvents(this, TerrificTransmutation.getPlugin());
+	}
+	
+	public static Map<UUID, Inventory> getInventories() {
+		return inventoryList;
 	}
 	
 	private void addInventory(Player player, Inventory inventory) {
@@ -54,6 +66,18 @@ public class EMCMenu implements Listener {
 			player.openInventory(createInventory(player));
 		}
 	}
+	/*
+	public static void openInventorySearch(Player player, String string) {
+		if (!containsInventory(player)) return;
+			Inventory inventory = inventoryList.get(player.getUniqueId());
+			
+			player.openInventory(inventory); //if still broken put back at the bottem
+			
+			inventory.setItem(9 - 1, itemSearch(string));
+			reloadSlotsSearch(new EMCPlayer(player), inventory, string);
+			fillSlots(inventory);
+	}
+	*/
 	
 	private static Inventory createInventory(Player player) {
 		Inventory inventory = Bukkit.createInventory(player, 54, inventory_name);
@@ -67,7 +91,7 @@ public class EMCMenu implements Listener {
 		EMCPlayer p = new EMCPlayer(player);
 		
 		inventory.setItem(1 - 1, EMCValue(p));
-		inventory.setItem(9 - 1, backround(Material.BEDROCK)); //put sign here(placeholder)
+		inventory.setItem(9 - 1, itemSearch(null));
 		inventory.setItem(50 - 1, itemConverter());
 		
 		inventory.setItem(2 - 1, backround(Material.MAGENTA_STAINED_GLASS_PANE));
@@ -150,7 +174,8 @@ public class EMCMenu implements Listener {
 							player.setEMC(player.getEMC() - TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + event.getCurrentItem().getType().name()) * event.getCurrentItem().getMaxStackSize());
 							player.getPlayer().getInventory().addItem(new AddEMC(new ItemStack(event.getCurrentItem().getType(), event.getCurrentItem().getMaxStackSize())).setEMCToItem());
 						}
-						event.getView().setItem(1 - 1, EMCValue(player));
+						//event.getView().setItem(1 - 1, EMCValue(player));
+						event.getClickedInventory().setItem(1 - 1, EMCValue(player));
 						player.getPlayer().updateInventory();
 					} else {
 						player.getPlayer().sendMessage(Strings.format("&cPlease clear space in your inventory!"));
@@ -171,12 +196,34 @@ public class EMCMenu implements Listener {
 						List<String> list = database.getConfig().getStringList("UnlockedItems");
 						list.add(event.getCursor().getType().name());
 						player.setRawUnlockedMaterials(list);
+						//event.getView().setItem(9 - 1, itemSearch(null));
+						event.getClickedInventory().setItem(9 - 1, itemSearch(null));
 						reloadSlots(player, event.getClickedInventory());
 					}
 					player.setEMC(player.getEMC() + player.getValue(event.getCursor().getType()) * event.getCursor().getAmount());
-					event.getView().setItem(1 - 1, EMCValue(player));
+					//event.getView().setItem(1 - 1, EMCValue(player));
+					event.getClickedInventory().setItem(1 - 1, EMCValue(player));
 					player.getPlayer().setItemOnCursor(new ItemStack(Material.AIR));
 					player.getPlayer().updateInventory();
+			}
+		}
+	}
+	
+	@EventHandler
+	public void searchItem(InventoryClickEvent event) {
+		if (event.getView().getTitle().equalsIgnoreCase(inventory_name) && event.getWhoClicked() instanceof Player) {
+				if (event.getRawSlot() == 9 - 1) {
+					EMCPlayer emcPlayer = new EMCPlayer((Player)event.getWhoClicked());
+					emcPlayer.getPlayer().closeInventory();
+		
+					signGUI
+		             .newMenu(Lists.newArrayList("&r", "&r^^^^^^^^^^^^^^^", "&rPlease imput the", "&rname of an item!"))
+		             .reopenIfFail()
+		             .response((player, lines) -> {
+		            	new SearchTask(player, lines[0]).runTask(TerrificTransmutation.getPlugin());
+		                return true;
+		             })
+		             .open(emcPlayer.getPlayer());
 			}
 		}
 	}
@@ -228,6 +275,23 @@ public class EMCMenu implements Listener {
 		return item;
 	}
 	
+	public static ItemStack itemSearch(String string) {
+		ItemStack item = new ItemStack(Material.OAK_SIGN, 1);
+		ItemMeta meta = item.getItemMeta();
+		
+		if (string != null) {
+			meta.setDisplayName(Strings.format("&rSearch: " + string));
+		} else {
+			meta.setDisplayName(Strings.format("&rSearch:"));
+		}
+		
+		
+		meta.setCustomModelData(69);
+		
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	private static void reloadSlots(EMCPlayer p, Inventory inventory) {
 		if (p.getUnlockedMaterials() != null) {
 			clearSlots(inventory);
@@ -241,7 +305,20 @@ public class EMCMenu implements Listener {
 		}
 	}
 	
-	private static void fillSlots(Inventory inventory) {
+	public static void reloadSlotsSearch(EMCPlayer p, Inventory inventory, String string) {
+		if (p.searchItems(string) != null) {
+			clearSlots(inventory);
+			for (ItemStack item : p.searchItems(string)) {
+				if (nextSlot(inventory) != -1) {
+					inventory.setItem(nextSlot(inventory), item);
+				} else {
+					break;
+				}
+			}
+		}
+	}
+	
+	public static void fillSlots(Inventory inventory) {
 		int index = 0;
 		for (ItemStack item : inventory.getContents()) {
 			if (item == null) {
@@ -336,6 +413,29 @@ public class EMCMenu implements Listener {
 		if (inventory.getItem(42 - 1) != null && inventory.getItem(42 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(42 - 1, null);
 		
 		if (inventory.getItem(43 - 1) != null && inventory.getItem(43 - 1).getType() != Material.BLACK_STAINED_GLASS_PANE) inventory.setItem(43 - 1, null);
+	}
+	
+}
+
+class SearchTask extends BukkitRunnable {
+
+	private Player player;
+	private String output;
+	
+	public SearchTask(Player player, String output) {
+		this.player = player;
+		this.output = output;
+	}
+	
+	@Override
+	public void run() {
+		Inventory inventory = EMCMenu.getInventories().get(player.getUniqueId());
+			
+ 		inventory.setItem(9 - 1, EMCMenu.itemSearch(output));
+ 		EMCMenu.reloadSlotsSearch(new EMCPlayer(player), inventory, output);
+ 		EMCMenu.fillSlots(inventory);
+ 			
+ 		player.openInventory(inventory); //error here
 	}
 	
 }

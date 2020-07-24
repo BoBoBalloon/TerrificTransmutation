@@ -17,8 +17,11 @@ import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerPickupItemListe
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//add search feature
 	//add transmutation table, new "block" you can place and works like tablet from there
+	
+	
+	//Dependencies:
+	//ProtocolLib
 	
 	public static TerrificTransmutation PLUGIN;
 	public static File database;
@@ -53,7 +56,7 @@ public class TerrificTransmutation extends JavaPlugin {
 		new EMCPlayerDataSetCommand();
 		new GetTomeCommand();
 	}
-
+	
 	public static TerrificTransmutation getPlugin() {
 		return PLUGIN;
 	}

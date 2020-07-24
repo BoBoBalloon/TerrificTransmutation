@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.md_5.bungee.api.ChatColor;
 import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
@@ -67,8 +68,10 @@ public class EMCPlayer {
 		if (unlockedMaterials == null) return null;
 		List<Material> materials = new ArrayList<Material>();
 		for (String string : unlockedMaterials) {
-			materials.add(Material.getMaterial(string));
+			Material mat = Material.getMaterial(string);
+			if (getValue(mat) != -1) materials.add(mat);
 		}
+		if (materials.isEmpty()) return null;
 		return materials;
 	}
 	
@@ -107,6 +110,20 @@ public class EMCPlayer {
 		
 		for (Material material : getUnlockedMaterialsInOrder()) {
 			items.add(getValueItemStack(material));
+		}
+		
+		return items;
+	}
+	
+	public List<ItemStack> searchItems(String string) {
+		if (getUnlockedItems() == null) return null;
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		List<ItemStack> rawItems = getUnlockedItems();
+		
+		for (ItemStack item : rawItems) {
+			if (item.getType().name().toLowerCase().replace("_", " ").contains(ChatColor.stripColor(string.toLowerCase()))) {
+				items.add(item);
+			}
 		}
 		
 		return items;
