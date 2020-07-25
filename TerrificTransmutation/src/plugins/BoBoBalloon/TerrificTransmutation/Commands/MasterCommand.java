@@ -21,6 +21,10 @@ public class MasterCommand implements CommandExecutor {
 			sender.sendMessage(Strings.format("&r&dTerrific Transmutation"));
 			sender.sendMessage("");
 			sender.sendMessage(Strings.format("&r&7-&r&a /gettome - get a Transmutation Tome"));
+			sender.sendMessage(Strings.format("&r&7-&r&a /givetome - give a Transmutation Tome"));
+			sender.sendMessage(Strings.format("&r&7-&r&a /emcdata - see how much EMC a player has"));
+			sender.sendMessage(Strings.format("&r&7-&r&a /emcset - set how much EMC a player has"));
+			sender.sendMessage(Strings.format("&r&7-&r&a /terrifictransmutation reload - reload config"));
 			sender.sendMessage(Strings.format("&r&5------------------------"));
 			return true;
 		} else if (args.length == 1) {

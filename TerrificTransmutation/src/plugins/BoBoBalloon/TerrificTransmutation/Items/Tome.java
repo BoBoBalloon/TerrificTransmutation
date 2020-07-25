@@ -25,12 +25,12 @@ public class Tome implements Listener {
 	
 	@EventHandler
 	public void tomeOpen(PlayerInteractEvent event) {
-		if (event.getPlayer().getInventory().getItemInMainHand() != null) {
-			if (isTome(event.getPlayer().getInventory().getItemInMainHand()) && 
-					event.getPlayer().hasPermission("terrifictransmutation.usetome")) {
+		if (event.getPlayer().getInventory().getItemInMainHand() != null && 
+				isTome(event.getPlayer().getInventory().getItemInMainHand())) {
+			if (event.getPlayer().hasPermission("terrifictransmutation.usetome")) {
 				EMCMenu.openInventory(event.getPlayer());
-				event.setCancelled(true);
 			}
+			event.setCancelled(true);
 		}
 	}
 	
