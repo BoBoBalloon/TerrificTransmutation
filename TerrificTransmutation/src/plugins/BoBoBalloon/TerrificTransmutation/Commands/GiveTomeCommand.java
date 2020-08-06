@@ -85,19 +85,3 @@ public class GiveTomeCommand implements CommandExecutor {
 	}
 	
 }
-
-/*
-if (sender instanceof Player) {
-	Player player = (Player) sender;
-	if (player.hasPermission("terrifictransmutation.command.gettome")) {
-		player.getInventory().addItem(Tome.tome());
-		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2F, 1F);
-		return true;
-	} else {
-		player.sendMessage(Strings.format("&r&cYou dont have sufficient permissions to access this command!"));
-	}
-} else {
-	sender.sendMessage(Strings.format("&r&cOnly players can use this command!"));
-}
-return false;
-*/

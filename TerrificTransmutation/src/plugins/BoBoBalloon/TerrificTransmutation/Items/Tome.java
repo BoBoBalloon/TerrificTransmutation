@@ -38,12 +38,13 @@ public class Tome implements Listener {
 		ItemStack tome = NormalUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=");
 		ItemMeta meta = tome.getItemMeta();
 		NamespacedKey randomKey = new NamespacedKey(TerrificTransmutation.getPlugin(), "randomValue");
+		String itemName = Strings.format(changeColorCodes(TerrificTransmutation.getPlugin().getConfig().getString("TransmutationTomeName")));
 		
-		meta.setDisplayName(Strings.format("&dTransmutation Tome"));
+		meta.setDisplayName(itemName);
 		
 		List<String> lore = new ArrayList<String>();
 		lore.add("");
-		lore.add(Strings.format("&rClick this item to open your &dtransmutation tome"));
+		lore.add(Strings.format("&rClick this item to open your " + itemName));
 		meta.setLore(lore);
 		
 		meta.getPersistentDataContainer().set(tomeKey, PersistentDataType.STRING, "true");
@@ -65,4 +66,28 @@ public class Tome implements Listener {
 		return true;
 	}
 	
+	private static String changeColorCodes(String string) {
+		return string.replace("(DARKRED)", "&4")
+				.replace("(RED)", "&c")
+				.replace("(GOLD)", "&6")
+				.replace("(YELLOW)", "&e")
+				.replace("(DARKGREEN)", "&2")
+				.replace("(GREEN)", "&a")
+				.replace("(AQUA)", "&b")
+				.replace("(DARKAQUA)", "&3")
+				.replace("(DARKBLUE)", "&1")
+				.replace("(BLUE)", "&9")
+				.replace("(LIGHTPURPLE)", "&d")
+				.replace("(DARKPURPLE)", "&5")
+				.replace("(WHITE)", "&f")
+				.replace("(GRAY)", "&7")
+				.replace("(DARK_GRAY)", "&8")
+				.replace("(BLACK)", "&0")
+				.replace("(RESET)", "&r")
+				.replace("(BOLD)", "&l")
+				.replace("(ITALIC)", "&o")
+				.replace("(UNDERLINE)", "&n")
+				.replace("(STRIKE)", "&m")
+				.replace("(RANDOM)", "&k");
+	}
 }

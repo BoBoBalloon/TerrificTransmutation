@@ -1,4 +1,5 @@
 # Only edit the values, if you edit the keys, all hell will break loose -BoBoBalloon(author of the plugin)
+TransmutationTomeName: (DARKPURPLE)Transmutation Tome #Color names are: (DARKRED), (RED), (GOLD), (YELLOW), (DARKGREEN), (GREEN), (AQUA), (DARKAQUA), (DARKBLUE), (BLUE), (LIGHTPURPLE), (DARKPURPLE), (WHITE), (GRAY), (DARK_GRAY), (BLACK), (RESET), (BOLD), (ITALIC), (UNDERLINE), (STRIKE), (RANDOM)
 EMCValue:
   BLACK_CONCRETE: 45
   BLUE_CONCRETE: 45

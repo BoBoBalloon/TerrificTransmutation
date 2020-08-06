@@ -4,6 +4,7 @@ api-version: 1.15
 author: BoBoBalloon
 main: plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation
 description: Transmutation in minecraft!
+depend: [ProtocolLib]
 
 commands:
   gettome:
