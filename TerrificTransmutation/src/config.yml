@@ -6,6 +6,8 @@ DatabaseName: transmutation
 UserTableName: tp_users
 MaterialTableName: tp_user_material
 Port: 3306
+KeepOnDeath: true
+Moveable: false
 TransmutationTomeName: (DARKPURPLE)Transmutation Tome #Color names are: (DARKRED), (RED), (GOLD), (YELLOW), (DARKGREEN), (GREEN), (AQUA), (DARKAQUA), (DARKBLUE), (BLUE), (LIGHTPURPLE), (DARKPURPLE), (WHITE), (GRAY), (DARK_GRAY), (BLACK), (RESET), (BOLD), (ITALIC), (UNDERLINE), (STRIKE), (RANDOM)
 EMCValue:
   BLACK_CONCRETE: 45

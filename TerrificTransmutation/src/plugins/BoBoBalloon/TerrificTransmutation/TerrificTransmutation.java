@@ -15,6 +15,8 @@ import plugins.BoBoBalloon.TerrificTransmutation.Commands.GiveTomeCommand;
 import plugins.BoBoBalloon.TerrificTransmutation.Commands.MasterCommand;
 import plugins.BoBoBalloon.TerrificTransmutation.Items.EMCMenu;
 import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
+import plugins.BoBoBalloon.TerrificTransmutation.Listeners.OnDeathListener;
+import plugins.BoBoBalloon.TerrificTransmutation.Listeners.OnDropOrMoveListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.OpenContainerListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerCreativeItemListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerJoinListener;
@@ -24,18 +26,13 @@ import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//add keepondeath boolean in config to make it so if true, the tome is not dropped on death and when player respawns gives it back
-	//add moveable boolean in config to make it if true, the tome cannot be moved out of the inventory/dropped on the ground
-	//when crafting/smelting an item put result through the AddEMC class
+	//make it so you cant add in items that have enchantments
 	//get staff to work on config.yml
 	
 	//maybe later:
 	//add transmutation table, new "block" you can place and works like tome from there
 	//dont use more then one type of listener
 	
-	
-	//CHANGELOG:
-	//name of transmutation tome is now customizable
 	
 	
 	private static TerrificTransmutation PLUGIN;
@@ -67,6 +64,8 @@ public class TerrificTransmutation extends JavaPlugin {
 		new PlayerJoinListener();
 		new PlayerPickupItemListener();
 		new OpenContainerListener();
+		new OnDeathListener();
+		new OnDropOrMoveListener();
 		
 		//commands
 		new MasterCommand();
