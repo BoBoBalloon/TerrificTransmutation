@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/Users/Ethan/Desktop/Java/Minecraft/Minecraft buildtools/authlib-1.5.17.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ethan/Desktop/Java/Minecraft/Minecraft buildtools/spigot-api-1.15.2-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ethan/Desktop/Java/Minecraft/Minecraft buildtools/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ethan/Desktop/Java/General/mysql-connector-java-5.1.49.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

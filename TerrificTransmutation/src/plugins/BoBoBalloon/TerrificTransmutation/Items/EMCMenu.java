@@ -22,7 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.google.common.collect.Lists;
 
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
-import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
 import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 import plugins.BoBoBalloon.TerrificTransmutation.Objects.EMCPlayer;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.SignMenuFactory;
@@ -152,9 +151,9 @@ public class EMCMenu implements Listener {
 					if (!event.getCurrentItem().getItemMeta().hasCustomModelData() &&
 							!(event.getClickedInventory() instanceof PlayerInventory)) {
 						if (event.isLeftClick()) {
-							if (player.getEMC() < player.getValue(event.getCurrentItem().getType())) return;
+							if (player.getEMC() < AddEMC.getValue(event.getCurrentItem().getType())) return;
 						} else if (event.isRightClick()) {
-							if (player.getEMC() < player.getValue(event.getCurrentItem().getType()) * event.getCurrentItem().getMaxStackSize()) return;
+							if (player.getEMC() < AddEMC.getValue(event.getCurrentItem().getType()) * event.getCurrentItem().getMaxStackSize()) return;
 						}
 					if (!inventorySpaceFull((Player)event.getWhoClicked())) {
 						if (event.isLeftClick()) {
@@ -179,16 +178,17 @@ public class EMCMenu implements Listener {
 		if (event.getView().getTitle().equalsIgnoreCase(inventory_name) && event.getWhoClicked() instanceof Player) {
 				if (event.getRawSlot() == 50 - 1) {
 					EMCPlayer player = new EMCPlayer((Player)event.getWhoClicked());
-					if (player.getValue(event.getCursor().getType()) == -1) return;
-					Database database = new Database(player.getPlayer().getUniqueId().toString());
-					if (!database.getConfig().getStringList("UnlockedItems").contains(event.getCursor().getType().name())) {
-						List<String> list = database.getConfig().getStringList("UnlockedItems");
+					if (AddEMC.getValue(event.getCursor().getType()) == -1) return;
+
+					if (!player.getRawUnlockedMaterials().contains(event.getCursor().getType().name())) {
+						List<String> list = player.getRawUnlockedMaterials();
 						list.add(event.getCursor().getType().name());
 						player.setRawUnlockedMaterials(list);
 						event.getClickedInventory().setItem(9 - 1, itemSearch(null));
 						reloadSlots(player, event.getClickedInventory());
 					}
-					player.setEMC(player.getEMC() + player.getValue(event.getCursor().getType()) * event.getCursor().getAmount());
+					
+					player.setEMC(player.getEMC() + AddEMC.getValue(event.getCursor().getType()) * event.getCursor().getAmount());
 					event.getClickedInventory().setItem(1 - 1, EMCValue(player));
 					player.getPlayer().setItemOnCursor(new ItemStack(Material.AIR));
 					player.getPlayer().updateInventory();

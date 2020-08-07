@@ -3,6 +3,7 @@ package plugins.BoBoBalloon.TerrificTransmutation.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,6 +28,11 @@ public class AddEMC {
 	
 	public NamespacedKey getKey() {
 		return key;
+	}
+	
+	public static int getValue(Material material) {
+		if (!TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + material.name())) return -1;
+		return TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + material.name());
 	}
 	
 	public void setEMC() {

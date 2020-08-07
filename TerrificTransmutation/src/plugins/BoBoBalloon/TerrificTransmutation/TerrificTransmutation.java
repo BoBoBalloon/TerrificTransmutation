@@ -1,7 +1,11 @@
 package plugins.BoBoBalloon.TerrificTransmutation;
 
-import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import plugins.BoBoBalloon.TerrificTransmutation.Commands.EMCPlayerDataCommand;
@@ -15,14 +19,13 @@ import plugins.BoBoBalloon.TerrificTransmutation.Listeners.OpenContainerListener
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerCreativeItemListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerJoinListener;
 import plugins.BoBoBalloon.TerrificTransmutation.Listeners.PlayerPickupItemListener;
+import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//change from ymls to a MySQL database
 	//add keepondeath boolean in config to make it so if true, the tome is not dropped on death and when player respawns gives it back
 	//add moveable boolean in config to make it if true, the tome cannot be moved out of the inventory/dropped on the ground
-	//make the name of the transmutation tome configurable
 	//when crafting/smelting an item put result through the AddEMC class
 	//get staff to work on config.yml
 	
@@ -34,20 +37,24 @@ public class TerrificTransmutation extends JavaPlugin {
 	//CHANGELOG:
 	//name of transmutation tome is now customizable
 	
-	public static TerrificTransmutation PLUGIN;
-	public static File database;
+	
+	private static TerrificTransmutation PLUGIN;
+	private static Connection connection;
+	private String host, database, username, password;
+	private int port;
+
 
 	@Override
 	public void onEnable() {
 		//initializing
 		PLUGIN = this;
-		database = new File(PLUGIN.getDataFolder() + "/database");
+		
+		mySQLSettup();
 		
 		//files
 		getConfig().options().copyHeader(true);
 		getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
-		if (!database.exists()) database.mkdir();
 		
 		//items & blocks
 		new Tome();
@@ -73,7 +80,38 @@ public class TerrificTransmutation extends JavaPlugin {
 		return PLUGIN;
 	}
 	
-	public static File getDatabase() {
-		return database;
+	private void mySQLSettup() {
+		host = PLUGIN.getConfig().getString("Host");
+		port = PLUGIN.getConfig().getInt("Port");
+		database = PLUGIN.getConfig().getString("DatabaseName");
+		username = PLUGIN.getConfig().getString("Username");
+		password = PLUGIN.getConfig().getString("Password");
+		
+		try {
+			synchronized(this) {
+				if (getConnection() != null && !getConnection().isClosed()) return;
+				Class.forName("com.mysql.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+				Bukkit.getConsoleSender().sendMessage(Strings.format("&rTerrificTransmutation:&a MySQL connection enabled!"));
+			}
+		
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 	}
+	
+	public static Connection getConnection() {
+		return connection;
+	}
+	
+	public static Statement getStatement() {
+		try {
+			return connection.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

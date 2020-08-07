@@ -1,19 +1,20 @@
 package plugins.BoBoBalloon.TerrificTransmutation.Objects;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.md_5.bungee.api.ChatColor;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
-import plugins.BoBoBalloon.TerrificTransmutation.Database.Database;
 import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 
 public class EMCPlayer {
@@ -21,18 +22,33 @@ public class EMCPlayer {
 	private Player player;
 	private int emc;
 	private List<String> unlockedMaterials;
-	private Database database;
+	private String tp_users, tp_user_material;
 	
 	public EMCPlayer(Player player) {
 		this.player = player;
 		
-		database = new Database(player.getUniqueId().toString());
+		tp_users = TerrificTransmutation.getPlugin().getConfig().getString("UserTableName");
+		tp_user_material = TerrificTransmutation.getPlugin().getConfig().getString("MaterialTableName");
 		
-		emc = database.getConfig().getInt("EMC");
+		try {
+			ResultSet emcValue = TerrificTransmutation.getStatement().executeQuery("select * from " + tp_users + " where uuid='" + player.getUniqueId() + "';");
+			while (emcValue.next()) {
+				emc = emcValue.getInt("emc");
+				break;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			emc = 0;
+		}
 		
-		if (!database.getConfig().getStringList("UnlockedItems").isEmpty()) {
-			unlockedMaterials = database.getConfig().getStringList("UnlockedItems");
-		} else {
+		unlockedMaterials = new ArrayList<String>();
+		try {
+			ResultSet materials = TerrificTransmutation.getStatement().executeQuery("select material from " + tp_user_material + " where uuid='" + player.getUniqueId() +"';");
+			while (materials.next()) {
+				unlockedMaterials.add(materials.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 			unlockedMaterials = null;
 		}
 	}
@@ -46,10 +62,13 @@ public class EMCPlayer {
 	}
 	
 	public void setEMC(int amount) {
-		database.getConfig().set("EMC", amount);
-		database.getConfig().options().copyDefaults(true);
-		database.getConfig().options().copyHeader(true);
-		database.saveConfig();
+		try {
+			TerrificTransmutation.getStatement().executeUpdate("update " + tp_users + " set emc=" + amount + " where uuid='" + player.getUniqueId() +"';");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		
 		emc = amount;
 	}
 	
@@ -58,10 +77,23 @@ public class EMCPlayer {
 	}
 	
 	public void setRawUnlockedMaterials(List<String> list) {
-		database.getConfig().set("UnlockedItems", list);
-		database.getConfig().options().copyDefaults(true);
-		database.getConfig().options().copyHeader(true);
-		database.saveConfig();
+		
+			try {
+				TerrificTransmutation.getStatement().executeUpdate("delete from " + tp_user_material + " where uuid='" + player.getUniqueId() +"';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return;
+			}
+		
+		for (String string : list) {
+			try {
+				TerrificTransmutation.getStatement().executeUpdate("INSERT INTO " + tp_user_material + " ( uuid, material ) VALUES ( '" + player.getUniqueId() +"', '" + string +"' );");
+			} catch (SQLException e) {
+				unlockedMaterials = null;
+				e.printStackTrace();
+				return;
+			}
+		}
 		unlockedMaterials = list;
 	}
 	
@@ -70,7 +102,7 @@ public class EMCPlayer {
 		List<Material> materials = new ArrayList<Material>();
 		for (String string : unlockedMaterials) {
 			Material mat = Material.getMaterial(string);
-			if (getValue(mat) != -1) materials.add(mat);
+			if (AddEMC.getValue(mat) != -1) materials.add(mat);
 		}
 		if (materials.isEmpty()) return null;
 		return materials;
@@ -128,11 +160,6 @@ public class EMCPlayer {
 		}
 		
 		return items;
-	}
-	
-	public int getValue(Material material) {
-		if (!TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + material.name())) return -1;
-		return TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + material.name());
 	}
 	
 	private ItemStack getValueItemStack(Material material) {
