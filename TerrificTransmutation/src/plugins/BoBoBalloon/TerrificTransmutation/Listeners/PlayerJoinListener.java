@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
+import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 
 public class PlayerJoinListener implements Listener {
@@ -33,6 +34,10 @@ public class PlayerJoinListener implements Listener {
 		}
 		
 		
+		if (TerrificTransmutation.getPlugin().getConfig().getBoolean("KeepOnDeath") && !containsTome(event.getPlayer().getInventory().getContents())) {
+			event.getPlayer().getInventory().addItem(Tome.tome());
+		}
+		
 	}
 	
 	private boolean containsPlayer(UUID uuid) {
@@ -49,6 +54,11 @@ public class PlayerJoinListener implements Listener {
 			e.printStackTrace();
 		}
 		return value;
+	}
+	
+	private boolean containsTome(ItemStack[] inventory) {
+		for (ItemStack item : inventory) if (item != null && Tome.isTome(item)) return true;
+		return false;
 	}
 	
 }
