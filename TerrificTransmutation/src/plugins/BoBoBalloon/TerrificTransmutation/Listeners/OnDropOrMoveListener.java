@@ -1,12 +1,11 @@
 package plugins.BoBoBalloon.TerrificTransmutation.Listeners;
 
-import org.bukkit.Material;
+import org.bukkit.block.Container;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.inventory.PlayerInventory;
-
+import org.bukkit.inventory.Inventory;
 import plugins.BoBoBalloon.TerrificTransmutation.TerrificTransmutation;
 import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 
@@ -24,11 +23,16 @@ public class OnDropOrMoveListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onMove(InventoryInteractEvent event) {
+	public void onMove(InventoryClickEvent event) {
 		if (!TerrificTransmutation.getPlugin().getConfig().getBoolean("Moveable")) {
-			if (event.getWhoClicked().getItemOnCursor().getType() != Material.AIR && Tome.isTome(event.getWhoClicked().getItemOnCursor()) && !(event.getInventory() instanceof PlayerInventory)) {
-				event.setCancelled(true);
-			}
+		     Inventory clicked = event.getClickedInventory();
+		     if (event.getInventory().getHolder() instanceof Container) {
+		        if (clicked == event.getWhoClicked().getInventory()) {
+		           if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && Tome.isTome(event.getCurrentItem())) {
+		               event.setCancelled(true);
+		           }
+		        }
+		    }
 		}
 	}
 }
