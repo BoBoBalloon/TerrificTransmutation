@@ -2,7 +2,6 @@ package plugins.BoBoBalloon.TerrificTransmutation.Utils;
 
 import org.bukkit.ChatColor;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,43 +85,4 @@ public final class Strings {
         int sec = rem % 60;
         return (mn < 10 ? "0" : "") + mn + ":" + (sec < 10 ? "0" : "") + sec;
     }
-    
-    /**
-     Made by @author GeeksForGeeks 
-     */
-
-   public static String randomString() { 
-	   
-	    int n = 500;
- 
-        byte[] array = new byte[1000]; 
-        new Random().nextBytes(array); 
-  
-        String randomString = new String(array, Charset.forName("UTF-8")); 
-  
-        // Create a StringBuffer to store the result 
-        StringBuffer r = new StringBuffer(); 
-  
-        // remove all spacial char 
-        String  AlphaNumericString 
-            = randomString 
-                  .replaceAll("[^A-Za-z0-9]", ""); 
-  
-        // Append first 20 alphanumeric characters 
-        // from the generated random String into the result 
-        for (int k = 0; k < AlphaNumericString.length(); k++) { 
-  
-            if (Character.isLetter(AlphaNumericString.charAt(k)) 
-                    && (n > 0) 
-                || Character.isDigit(AlphaNumericString.charAt(k)) 
-                       && (n > 0)) { 
-  
-                r.append(AlphaNumericString.charAt(k)); 
-                n--; 
-            } 
-        } 
-  
-        // return the resultant string 
-        return r.toString(); 
-    } 
 }

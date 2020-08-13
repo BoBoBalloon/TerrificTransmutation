@@ -26,7 +26,6 @@ import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//make it so you cant add in items that have enchantments
 	//get staff to work on config.yml
 	
 	//maybe later:

@@ -2,6 +2,7 @@ package plugins.BoBoBalloon.TerrificTransmutation.Items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -48,7 +49,7 @@ public class Tome implements Listener {
 		meta.setLore(lore);
 		
 		meta.getPersistentDataContainer().set(tomeKey, PersistentDataType.STRING, "true");
-		meta.getPersistentDataContainer().set(randomKey, PersistentDataType.STRING, Strings.randomString());
+		meta.getPersistentDataContainer().set(randomKey, PersistentDataType.STRING, UUID.randomUUID().toString());
 		
 		
 		tome.setItemMeta(meta);
