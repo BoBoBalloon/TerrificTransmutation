@@ -14,16 +14,20 @@ import plugins.BoBoBalloon.TerrificTransmutation.Items.Tome;
 import plugins.BoBoBalloon.TerrificTransmutation.Objects.AddEMC;
 
 public class PlayerJoinListener implements Listener {
+	
+	private String tp_users;
 
 	public PlayerJoinListener() {
 		TerrificTransmutation.getPlugin().getServer().getPluginManager().registerEvents(this, TerrificTransmutation.getPlugin());
+		
+		tp_users = TerrificTransmutation.getPlugin().getConfig().getString("UserTableName");
 	}
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		if (!containsPlayer(event.getPlayer().getUniqueId())) {
 			try {
-				TerrificTransmutation.getStatement().executeUpdate("INSERT INTO tp_users ( uuid, emc ) VALUES ( '" + event.getPlayer().getUniqueId() + "', 0 );");
+				TerrificTransmutation.getStatement().executeUpdate("INSERT INTO " + tp_users + " ( uuid, emc ) VALUES ( '" + event.getPlayer().getUniqueId() + "', 0 );");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -43,7 +47,7 @@ public class PlayerJoinListener implements Listener {
 	private boolean containsPlayer(UUID uuid) {
 		boolean value = false;
 		try {
-			ResultSet result = TerrificTransmutation.getStatement().executeQuery("select uuid from tp_users where uuid='" + uuid +"';");
+			ResultSet result = TerrificTransmutation.getStatement().executeQuery("select uuid from " + tp_users + " where uuid='" + uuid +"';");
 			while (result.next()) {
 				if (!result.getString(1).isEmpty()) {
 					value = true;

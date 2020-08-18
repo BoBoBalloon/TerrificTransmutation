@@ -39,7 +39,7 @@ public class AddEMC {
 		if (item != null && 
 				item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(key, PersistentDataType.INTEGER)) {
 			if (item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.INTEGER) !=
-					TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())) {
+					TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name()) && !item.getItemMeta().hasCustomModelData()) {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
 				lore.add(Strings.format("&eEMC&r: " + TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())));
@@ -54,7 +54,7 @@ public class AddEMC {
 
 	private void addEMC() {
 		if (item != null && NormalUtils.isNormal(item) && 
-				TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + item.getType().name())) {
+				TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + item.getType().name()) && !item.getItemMeta().hasCustomModelData()) {
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<String>();
 			lore.add(Strings.format("&eEMC&r: " + TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())));
@@ -68,7 +68,7 @@ public class AddEMC {
 		if (item != null && 
 				item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(key, PersistentDataType.INTEGER)) {
 			if (item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.INTEGER) !=
-					TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())) {
+					TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name()) && !item.getItemMeta().hasCustomModelData()) {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = new ArrayList<String>();
 				lore.add(Strings.format("&eEMC&r: " + TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())));
@@ -85,7 +85,7 @@ public class AddEMC {
 	
 	private ItemStack addEMCToItem() {
 		if (item != null && NormalUtils.isNormal(item) && 
-				TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + item.getType().name())) {
+				TerrificTransmutation.getPlugin().getConfig().getBoolean("IsEnabled." + item.getType().name()) && !item.getItemMeta().hasCustomModelData()) {
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<String>();
 			lore.add(Strings.format("&eEMC&r: " + TerrificTransmutation.getPlugin().getConfig().getInt("EMCValue." + item.getType().name())));

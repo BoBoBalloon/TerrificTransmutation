@@ -178,7 +178,8 @@ public class EMCMenu implements Listener {
 		if (event.getView().getTitle().equalsIgnoreCase(inventory_name) && event.getWhoClicked() instanceof Player) {
 				if (event.getRawSlot() == 50 - 1) {
 					EMCPlayer player = new EMCPlayer((Player)event.getWhoClicked());
-					if (AddEMC.getValue(event.getCursor().getType()) == -1 || event.getCursor().getItemMeta().hasEnchants()) return;
+					if (AddEMC.getValue(event.getCursor().getType()) == -1 || event.getCursor().getItemMeta().hasEnchants() ||
+							event.getCursor().getItemMeta().hasCustomModelData()) return;
 
 					if (!player.getRawUnlockedMaterials().contains(event.getCursor().getType().name())) {
 						List<String> list = player.getRawUnlockedMaterials();

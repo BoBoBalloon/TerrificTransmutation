@@ -26,7 +26,7 @@ import plugins.BoBoBalloon.TerrificTransmutation.Utils.Strings;
 public class TerrificTransmutation extends JavaPlugin {
 	
 	//TO DO LIST:
-	//get staff to work on config.yml
+	//dont add emc nbt or lore if item has custom model data, also dont allow it to be converted to emc if it has custom model data
 	
 	//maybe later:
 	//add transmutation table, new "block" you can place and works like tome from there
